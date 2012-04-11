@@ -51,7 +51,7 @@ fi
 # TextWrangler
 alias tw='open -a TextWrangler'
 alias terminal='open -na Terminal'
-alias vim='mvim'
+alias vim='mvim -c ":set fullscreen"'
 
 alias ssh="ssh -X"
 
