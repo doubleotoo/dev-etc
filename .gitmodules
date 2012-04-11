@@ -1,0 +1,21 @@
+[submodule "vim/bundle/supertab"]
+	path = vim/bundle/supertab
+	url = git@github.com:doubleotoo/supertab.git
+[submodule "vim/bundle/delimMate"]
+	path = vim/bundle/delimMate
+	url = git@github.com:doubleotoo/delimitMate.git
+[submodule "vim/bundle/syntastic"]
+	path = vim/bundle/syntastic
+	url = git@github.com:doubleotoo/syntastic.git
+[submodule "vim/bundle/tagbar"]
+	path = vim/bundle/tagbar
+	url = git@github.com:doubleotoo/tagbar.git
+[submodule "vim/bundle/vim-colors-solarized"]
+	path = vim/bundle/vim-colors-solarized
+	url = git@github.com:doubleotoo/vim-colors-solarized.git
+[submodule "vim/bundle/vim-commentary"]
+	path = vim/bundle/vim-commentary
+	url = git@github.com:doubleotoo/vim-commentary.git
+[submodule "vim/bundle/vim-fugitive"]
+	path = vim/bundle/vim-fugitive
+	url = git@github.com:doubleotoo/vim-fugitive.git

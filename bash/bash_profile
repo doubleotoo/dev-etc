@@ -1,0 +1,48 @@
+#!/bin/bash
+
+#export SHELL=/bin/bash
+#export CLICOLOR=1
+#export LSCOLORS=GxFxCxDxBxegedabagaced
+
+#--------------------------------------------------------------------------------
+# Toolchain
+#
+source "${HOME}/Development/setup.sh"
+source "${HOME}/Development/etc/setup.sh"
+
+# Custom git-commands
+export PATH="${HOME}/Development/projects/osx_setup/git/bin:$PATH"
+
+
+#--------------------------------------------------------------------------------
+# Auto-completions (Mac OS X)
+#
+# Git
+# --------------------------------------
+# bash-completion @1.3 (sysutils)
+#     Programmable bash completions
+#
+# $ port install bash-completion
+# if [ -f /Users/too1/Development/opt/macports/install/etc/bash_completion ]; then
+#   source /Users/too1/Development/opt/macports/install/etc/bash_completion
+# fi
+#
+# -or-
+#
+# source ${MACPORTS_INSTALL}/share/doc/git-core/contrib/completion/git-completion.bash
+#
+
+
+#--------------------------------------------------------------------------------
+# Ruby (rvm and rails support)
+#
+[[ -s "${HOME}/.rvm/scripts/rvm" ]] && source "${HOME}/.rvm/scripts/rvm" 
+
+
+#--------------------------------------------------------------------------------
+# Bash utilities, aliases, etc.
+#
+if [ -e "${HOME}/.bashrc" ]; then
+    source "${HOME}/.bashrc"
+fi
+

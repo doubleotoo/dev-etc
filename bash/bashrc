@@ -1,0 +1,283 @@
+#!/bin/bash -v
+#
+# TODO:
+#
+#  1.   Keep track of top X visited directories and allow
+#    shortcut navigation on startup to change to that directory.
+#
+#
+#
+[ -z "$PS1" ] && return 0;
+: Reading ~/.bashrc
+#########################################################################################
+# Terminal Colors
+#
+# check if stdout is a terminal...
+#
+: Checking if Terminal Colors are supported
+if [ -t 1 ]; then
+
+    # see if it supports colors...
+    ncolors=$(tput colors)
+
+    if test -n "$ncolors" && test $ncolors -ge 8; then
+    : Terminal Colors are supported
+        bold="$(tput bold)"
+        underline="$(tput smul)"
+        standout="$(tput smso)"
+        normal="$(tput sgr0)"
+        black="$(tput setaf 0)"
+        red="$(tput setaf 1)"
+        green="$(tput setaf 2)"
+        yellow="$(tput setaf 3)"
+        blue="$(tput setaf 4)"
+        magenta="$(tput setaf 5)"
+        cyan="$(tput setaf 6)"
+        white="$(tput setaf 7)"
+    TTY_COLORS=$ncolors
+  else
+    : Terminal Colors are not supported!
+    fi
+else
+  : Terminal Colors are not supported -- not a terminal!
+fi
+
+#rvm and rails support
+[[ -s "/Users/too1/.rvm/scripts/rvm" ]] && source "/Users/too1/.rvm/scripts/rvm" 
+
+#########################################################################################
+#  Applications
+#
+# TextWrangler
+alias tw='open -a TextWrangler'
+alias terminal='open -na Terminal'
+alias vim='mvim'
+
+alias ssh="ssh -X"
+
+#alias tux270-0="rdesktop -g 1600x1024 tux270-0"
+alias tux270-0="rdesktop -g 1920x1280 tux270-0"
+
+#########################################################################################
+#  Utilities
+#
+export PREFIX="     "
+function _indent () {
+  while read; do
+  echo "${PREFIX}$REPLY"
+  done
+}
+
+#########################################################################################
+# Simple aliases
+#
+alias hudson-rose="ssh hudson-rose@hudson-rose-01"
+
+#########################################################################################
+# Untar
+#
+function untar () {
+  last_arg=${!#}
+  case $last_arg in
+    *.tar) tar xvf "$@" ;;
+    *) tar xvzf "$@" ;;
+  esac
+}
+
+#########################################################################################
+# Tar-ls
+#
+function tar-ls() {
+  last_arg=${!#}
+  case $last_arg in
+    *.tar) tar tvf "$@" ;;
+    *.tar.gz) tar ztvf "$@" ;;
+    *.tar.bz2) tar jtvf "$@" ;;
+    *) echo "Unknown archive format for: $@" ;;
+  esac
+}
+#########################################################################################
+# Git
+#
+function _git () {
+  FORMAT=""
+  if [ "$1" = "branch" ]; then
+    # Highlight the working branch
+    echo;
+    [ -e .git/config ] && cat .git/config |grep url |awk '{print $3}'
+    git "$@" |while read; do 
+      if [ ! "$REPLY" = "  branch" ]; then
+        echo -e "${PREFIX}${REPLY/\*/\033[1;31m*}\033[00m"
+      fi
+    done; 2>&1 |_indent
+  else
+    git "$@"
+  fi
+  #[ "$1" = "branch" ] && git "$@" 2>&1 |sed -n 's/\(\*.*\).*/\\\\033[1;31m\1/p' | xargs -I{} echo -e {} 2>&1 | _indent
+}
+alias git=_git
+#########################################################################################
+# ls / path
+#
+#history | tail -2 | head -1 | awk '{print $2}'
+function _ls () { 
+  if [ -d .git ]; then
+    #_border
+    git branch
+    _border
+    echo
+  fi
+  echo;
+  ls -G "$@"
+}
+  alias ls=_ls
+  alias ll="ls -l"
+function path () {
+  """Lists the hostname, username, and directory.
+  """
+  echo
+  local HOSTNAME=`hostname | awk 'BEGIN { FS="." } { print $1 }'`
+  pwd "$@" | xargs -I{} echo -e -n "\033[1;31m$PREFIX" {};
+  echo -e " \033[00m@ $HOSTNAME ($USER)" 1>&2
+}
+#########################################################################################
+# cd / pushd / popd
+#
+function _cd () { 
+  #cd "$@";
+  pushd "$@" 1>/dev/null;
+  ls; 
+}
+  alias cd=_cd
+function _pushd () {
+  if [ ! -n "$@" ]; then
+    cd "$@"
+  else
+    pushd "$@";
+  fi
+  ls;
+}
+  alias pushd=_pushd
+function _popd () {
+  popd "$@";
+  ls;
+}
+  alias popd=_popd
+function _border () { for i in {1..80}; do echo -n -e "${yellow}-${normal}"; done; }
+function _cat () { echo; echo -e "${red}$@${normal}"; _border; echo; cat "$@"; _border; echo; }
+  alias cat=_cat
+#########################################################################################
+# mkdir
+#
+function _mkdir () { 
+  mkdir "$@";
+  for newdir in "$@"; do 
+    if [[ $newdir != -* ]]; then
+      echo;
+      _border
+      echo;
+      echo "Created ${red}$(basename $newdir)${normal} in $(dirname $newdir):"
+      # TODO: highlight the created directory
+      ls $(dirname $newdir) #|sed "s/\b\($(basename $newdir)\)\b/\1/"
+    fi
+  done
+}
+  alias mkdir=_mkdir
+
+
+#########################################################################################
+# OS X only
+#
+#########################################################################################
+# twd
+#
+# Open new tab initialized to the current working
+# modified from http://www.nanoant.com/programming/opening-specified-path-in-terminals-new-tab
+function twd() {
+if [ $(uname -s) = "Darwin" ]; then
+  osascript <<END 
+      tell application "Terminal"
+        tell application "System Events" to tell process "Terminal" to keystroke "t" using command down
+      do script "cd $(pwd)" in first window
+    end tell
+END
+else
+  echo "twd is only supported on Mac OS X"
+fi
+}
+
+# seq 60
+dotcd () {
+        cd "$1"/"$2"
+} 
+
+dots () {
+        num="$1"
+        [ ! -n "$num" ] && num=10
+        for (( i = 1; i <= "$num"; i++ )); do
+          spaces="$( printf "%${i}s" )"
+          dots="$( echo "${spaces// /.}" )"
+          path="$( echo "${spaces// /..\/}" )"
+          alias "$dots"="dotcd $path"
+        done
+}
+dots
+
+
+#########################################################################################
+# Git configurations
+#
+#########################################################################################
+git config --global color.ui true
+git config --global user.name "Justin Too"
+git config --global user.email "too1@llnl.gov"
+git config --global branch.autosetupmerge true
+git config --global push.default tracking
+#git config --global commit.template $HOME/.gitcommit.template
+
+hbash () {
+(
+        echo "Terminal:"
+        echo "
+        esc-d           Delete word (forward)
+        ctrl-w          Delete word (backward)
+        ctrl-k          Delete from cursor until EOL
+        ctrl-u          Delete from cursor until ^
+        ctrl-d          Delete character under cursor"
+
+        echo "Help:"
+        echo "
+        Info:
+
+                $ info <program>
+
+        Manual Pages: subset of info pages
+
+                $ man # <program>
+
+                        e.g. $ man 5 passwd
+                        e.g. $ man -a passwd
+
+        Search programs' short descriptions:
+
+                $ apropos <search-term>
+
+                **Looks in whatis database:
+
+                        e.g. $ whatis uid
+
+                                issetugid(2)             - is current process tainted by uid or gid changes
+
+
+
+        Logging in:
+
+                Get some help with a randomly generated password:
+
+                $ pwgen
+        "
+
+) 2>&1 |less
+}
+
+ls

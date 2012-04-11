@@ -1,0 +1,51 @@
+#!/bin/bash
+#
+#   term prompt
+#      by Justin Too
+#
+#  My custom terminal prompt.
+#
+#  Example:
+#     __________________________________________________________________________
+#      ~/Development/projects/osx_setup @ sealavender (too1)
+#       8:53 AM  $ cat too1-term
+
+function term() {
+  #-------------------------------------
+  # COLORS
+  local NO_COLOR="\[\033[0m\]"
+  local GREYBG="\[\e[1;30;47m\]"
+  local GRAY="\[\033[1;30m\]"
+  local LIGHT_GRAY="\[\033[0;37m\]"
+  local WHITE="\[\033[1;37m\]"
+  local LIGHT_BLUE="\[\033[1;34m\]"
+  local YELLOW="\[\033[1;33m\]"
+  local RED="\[\033[1;31m\]"
+  #######################################
+  local IDENTITY=" \w @ \h (\u)"
+  local TITLEBAR="\[\e]2;$IDENTITY\a"
+
+  local BORDER="________________________________________________________________________________"
+  local bordersize=$(echo -n $BORDER | wc -c | tr -d " ")
+
+  TERMWIDTH=${COLUMNS}
+  let fillsize=${TERMWIDTH}-${bordersize}
+  fill=""
+  while [ "$fillsize" -gt "0" ] 
+  do 
+     fill="${fill}_"
+     let fillsize=${fillsize}-1
+  done
+
+  PS1="$TITLEBAR\
+$RED$BORDER$fill\n\
+$GREYBG$IDENTITY \n\
+ $(date '+%l:%M %p') $NO_COLOR$RED \$$NO_COLOR "
+
+  PS2="$GREYBG $(date '+%l:%M %p') $NO_COLOR$RED \$$NO_COLOR "
+
+  PROMPT_COMMAND="echo;echo -e \"\033[31m$(date '+%l:%M %p')\""
+}
+
+term
+
