@@ -230,7 +230,7 @@ dots
 #########################################################################################
 git config --global color.ui true
 git config --global user.name "Justin Too"
-git config --global user.email "too1@llnl.gov"
+git config --global user.email "doubleotoo@gmail.com"
 git config --global branch.autosetupmerge true
 git config --global push.default tracking
 #git config --global commit.template $HOME/.gitcommit.template
