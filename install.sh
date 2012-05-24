@@ -39,3 +39,8 @@ fi
 symlink "${SRCDIR}/vim/" "${HOME}/.vim"
 symlink "${SRCDIR}/vim/vimrc" "${HOME}/.vimrc"
 
+# ------------------------------------------------------------------------------
+# Submodule repositories
+git submodule init
+git submodule update
+
