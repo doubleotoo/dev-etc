@@ -52,6 +52,7 @@ fi
 alias tw='open -a TextWrangler'
 alias terminal='open -na Terminal'
 alias vim='mvim -c ":set fullscreen"'
+alias vimtmp='vim $(mktemp "$TMPDIR/tmp-vim-XXX)"'
 
 alias ssh="ssh -X"
 
@@ -230,7 +231,7 @@ dots
 #########################################################################################
 git config --global color.ui true
 git config --global user.name "Justin Too"
-git config --global user.email "too1@llnl.gov"
+git config --global user.email "doubleotoo@gmail.com"
 git config --global branch.autosetupmerge true
 git config --global push.default tracking
 #git config --global commit.template $HOME/.gitcommit.template
@@ -281,3 +282,5 @@ hbash () {
 }
 
 ls
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting

@@ -10,8 +10,11 @@
 source "${HOME}/Development/setup.sh"
 source "${HOME}/Development/etc/setup.sh"
 
+source "${HOME}/Development/opt/python/develop/bin/activate"
+
 # Custom git-commands
-export PATH="${HOME}/Development/projects/osx_setup/git/bin:$PATH"
+export PATH="${HOME}/Development/etc/git/custom_commands/bin:$PATH"
+export PATH="${HOME}/Development/etc/bin:$PATH"
 
 
 #--------------------------------------------------------------------------------
@@ -36,7 +39,7 @@ export PATH="${HOME}/Development/projects/osx_setup/git/bin:$PATH"
 #--------------------------------------------------------------------------------
 # Ruby (rvm and rails support)
 #
-[[ -s "${HOME}/.rvm/scripts/rvm" ]] && source "${HOME}/.rvm/scripts/rvm" 
+source "${HOME}/.rvm/scripts/rvm"
 
 
 #--------------------------------------------------------------------------------
